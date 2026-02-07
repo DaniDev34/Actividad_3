@@ -45,7 +45,216 @@ y usar objetos a partir de esas clases.
 
 - Desde la clase principal (main), invoca el método compararProductos y muestra el resultado en la pantalla.
 
+---
+
 ## Desarrollo de la actividad   
 
-A continuación se presenta el bloque de código de la clase **Producto** en Java.
+A continuación se presentan los códigos que fueron usados para desarrollar este programa, así como también sus respectivas salidas esperadas 
+
+```java
+public class Producto {
+
+    // Atributos
+    private String titulo;
+    private String descripcion;
+    private String idproducto;
+    private String genero;
+    private Double costo;
+    private Double impuesto;
+    private Double precioTotal;
+
+    // Constructores
+    
+    // Constructor vacío
+
+    public Producto() {
+    }
+
+    // Constructor 
+
+    public Producto(String titulo, String descripcion, String idproducto, String genero, Double costo, Double impuesto, Double precioTotal) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.idproducto = idproducto;
+        this.genero = genero;
+        this.costo = costo;
+        this.impuesto = impuesto;
+        this.precioTotal = precioTotal;
+
+    }
+
+
+    // Getters
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getIdProducto() {
+        return idproducto;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public Double getCosto() {
+        return costo;
+    }
+
+    public Double getImpuesto() {
+        return impuesto;
+    }
+
+    // Setters
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setIdProducto(String idproducto) {
+        this.idproducto = idproducto;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public void setCosto(Double costo) {
+        this.costo = costo;
+    }
+
+    public void setImpuesto(Double impuesto) {
+        this.impuesto = impuesto;
+    }
+
+
+    // Métodos
+
+
+    public double calcularPrecio(double utilidad) {
+        // Calcular impuesto
+        double impuestoRecalculado = costo * 0.15;
+        this.impuesto = impuestoRecalculado;
+
+        // Calcular precio total
+        double precioTotal = costo + impuestoRecalculado + (costo * utilidad / 100);
+        return precioTotal;
+    }
+
+    public void mostrarInfo() {
+        System.out.println("Titulo: " + titulo);
+        System.out.println("Descripción: " + descripcion);
+        System.out.println("ID: " + idproducto);
+        System.out.println("Género: " + genero);
+        System.out.println("Costo: " + costo);
+        System.out.println("Impuesto: " + impuesto);
+        System.out.println("precio total: " + precioTotal);
+    }
+
+}
+```
+
+---
+
+El siguiente código presentado es para la clase **Main**, donde el usuario creará el producto
+
+```Java
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        Producto p1 = new Producto();
+        Producto p2 = new Producto();
+
+        try { // try-catch para manejar posibles errores basicos de entrada 
+            
+            System.out.println("---- INGRESA DATOS DEL PRODUCTO 1 ----");
+            productosteclado(sc, p1); // cargar datos del producto 1
+
+            System.out.println("---- INGRESA DATOS DEL PRODUCTO 2 ----");
+            productosteclado(sc, p2); // cargar datos del producto 2
+
+            System.out.println("---- DATOS DEL PRODUCTO 1 ----");
+            p1.mostrarInfo();
+
+            System.out.println("---- DATOS DEL PRODUCTO 2 ----");
+            p2.mostrarInfo();
+            
+            System.out.print("Ingresa el porcentaje de utilidad: ");
+            double utilidad = sc.nextDouble();
+            
+            String ProductoMayor = compararProductos(p1, p2, utilidad);
+
+            System.out.println("---- RESULTADO DE COMPARACION ----");
+            System.out.println("Producto con mayor precio de venta: " + ProductoMayor);
+
+        } catch (InputMismatchException e) { // manejo de error en caso de ingresar un dato incorrecto (como texto en lugar de número)
+            System.out.println(" Error: Ingresaste un dato incorrecto.");
+        
+        } catch (Exception e) { // manejo de cualquier otro error inesperado
+            System.out.println(" Ocurrió un error ");
+
+        } finally { // finally para finalizar el programa, cerrando scanner 
+            sc.close();
+            System.out.println("Programa finalizado.");
+        }
+    }
+
+    
+    private static void productosteclado(Scanner sc, Producto p) { // Método auxiliar para no repetir código
+
+        sc.nextLine(); 
+
+        System.out.println("Titulo: ");
+        p.setTitulo(sc.nextLine());
+
+        System.out.print("Descripcion: ");
+        p.setDescripcion(sc.nextLine());
+
+        System.out.print("ID: ");
+        p.setIdProducto(sc.nextLine());
+
+        System.out.print("Genero: ");
+        p.setGenero(sc.nextLine());
+
+        System.out.print("Costo: ");
+        p.setCosto(sc.nextDouble());
+
+        System.out.print("Impuesto (valor cualquiera, posteriormente se calcula): ");
+        p.setImpuesto(sc.nextDouble());
+    }
+
+    
+    public static String compararProductos(Producto a, Producto b, double utilidad) { // Para comparar dos productos por su precio
+
+        double precioA = a.calcularPrecio(utilidad); 
+        double precioB = b.calcularPrecio(utilidad);
+
+        if (precioA > precioB) {
+            return a.getTitulo();
+        } else if (precioB > precioA) {
+            return b.getTitulo();
+        } else { // si ambos precios son iguales 
+            return "Ambos productos tienen el mismo precio de venta";
+        }
+    }
+}
+```
+![Imagen evidencia](captura_1.png)
+
+---
 
